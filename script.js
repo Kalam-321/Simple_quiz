@@ -50,7 +50,7 @@ async function startQuiz()
 {
     const response = await fetch(apiUrl);
     var data = await response.json();
-    console.log(data.results);
+    // console.log(data.results);
     data.results.forEach((result)=>
     {
         const questionObject = {};
