@@ -1,42 +1,42 @@
-
+const apiUrl = "https://opentdb.com/api.php?amount=15&difficulty=easy&type=multiple";
 
 const questions = [
-    {
-        question : "Which is the largest animal in the world?",
-        answers : [
-            {text:"Shark",correct:"false"},
-            {text:"Blue Whale",correct:"true"},
-            {text:"Elephant",correct:"false"},
-            {text:"Lion",correct:"false"},
-        ]
-    },
-    {
-        question : "What does HTML stand for",
-        answers : [
-            {text:"Hyper Text Modifiable Language",correct:"false"},
-            {text:"Hidden Translate Markup Language",correct:"false"},
-            {text:"Hyper Text Markup Language",correct:"true"},
-            {text:"Hyper Transfer Management Language",correct:"false"},
-        ]
-    },
-    {
-        question : "JavaScript's conventional name is ?",
-        answers : [
-            {text:"TypeScript",correct:"false"},
-            {text:"Node JS",correct:"false"},
-            {text:"SigmaScript",correct:"false"},
-            {text:"EcmaScript",correct:"true"},
-        ]
-    },
-    {
-        question : "Who invented telephone?",
-        answers : [
-            {text:"Alexander GrahamBell",correct:"true"},
-            {text:"Pados ke chacha",correct:"false"},
-            {text:"Myself",correct:"false"},
-            {text:"Thomas Bhai",correct:"false"},
-        ]
-    },
+    // {
+    //     question : "Which is the largest animal in the world?",
+    //     answers : [
+    //         {text:"Shark",correct:"false"},
+    //         {text:"Blue Whale",correct:"true"},
+    //         {text:"Elephant",correct:"false"},
+    //         {text:"Lion",correct:"false"},
+    //     ]
+    // },
+    // {
+    //     question : "What does HTML stand for",
+    //     answers : [
+    //         {text:"Hyper Text Modifiable Language",correct:"false"},
+    //         {text:"Hidden Translate Markup Language",correct:"false"},
+    //         {text:"Hyper Text Markup Language",correct:"true"},
+    //         {text:"Hyper Transfer Management Language",correct:"false"},
+    //     ]
+    // },
+    // {
+    //     question : "JavaScript's conventional name is ?",
+    //     answers : [
+    //         {text:"TypeScript",correct:"false"},
+    //         {text:"Node JS",correct:"false"},
+    //         {text:"SigmaScript",correct:"false"},
+    //         {text:"EcmaScript",correct:"true"},
+    //     ]
+    // },
+    // {
+    //     question : "Who invented telephone?",
+    //     answers : [
+    //         {text:"Alexander GrahamBell",correct:"true"},
+    //         {text:"Pados ke chacha",correct:"false"},
+    //         {text:"Myself",correct:"false"},
+    //         {text:"Thomas Bhai",correct:"false"},
+    //     ]
+    // },
 ]
 
 const questionElement = document.getElementById("question");
@@ -46,8 +46,42 @@ const nextButton = document.getElementById("next-btn");
 let currentQuestionIndex = 0;
 let score = 0;
 
-function startQuiz()
+async function startQuiz()
 {
+    const response = await fetch(apiUrl);
+    var data = await response.json();
+    console.log(data.results);
+    data.results.forEach((result)=>
+    {
+        const questionObject = {};
+        questionObject.question = result.question;
+        questionObject.answers = [];
+        result.incorrect_answers.push(result.correct_answer);
+        const shuffle = (array) => { 
+            for (let i = array.length - 1; i > 0; i--) { 
+                const j = Math.floor(Math.random() * (i + 1)); 
+                [array[i], array[j]] = [array[j], array[i]]; 
+            } 
+            return array; 
+        };
+        const answersOfQuestion =  shuffle(result.incorrect_answers);
+        answersOfQuestion.forEach((answer)=>{
+            const answerObject = {};
+            answerObject.text = answer;
+            if(answer==result.correct_answer)
+            {
+                answerObject.correct = "true";
+            }
+            else
+            {
+                answerObject.correct = "false";
+            }           
+            questionObject.answers.push(answerObject);
+        })
+        questions.push(questionObject);
+        console.log(questionObject)
+        // console.log(questions);
+    })
     currentQuestionIndex = 0;
     score = 0;
     nextButton.innerHTML = "Next";
