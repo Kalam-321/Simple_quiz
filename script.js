@@ -79,7 +79,7 @@ async function startQuiz()
             questionObject.answers.push(answerObject);
         })
         questions.push(questionObject);
-        console.log(questionObject)
+        // console.log(questionObject)
         // console.log(questions);
     })
     currentQuestionIndex = 0;
